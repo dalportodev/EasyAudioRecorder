@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "694691420363",
+    "firebase_url": "https://easy-audio-recorder.firebaseio.com",
+    "project_id": "easy-audio-recorder",
+    "storage_bucket": "easy-audio-recorder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694691420363:android:83ff0cd5367850ca",
+        "android_client_info": {
+          "package_name": "com.chomptech.easyaudiorecorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694691420363-c6ab13ojr1pn6a45j963b98q8u0dgh6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0W8oasfHv2O71FO8o1Wm_hFbXom_SnlQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
