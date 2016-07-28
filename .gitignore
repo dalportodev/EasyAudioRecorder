@@ -6,3 +6,6 @@
 .DS_Store
 /build
 /captures
+app/app-release.apk
+app/libs/
+.idea/vcs.xml
