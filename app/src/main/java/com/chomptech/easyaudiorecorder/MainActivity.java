@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean micPermission;
     private boolean extStoragePermission;
     private ArrayList recList = new ArrayList<String>();
-    private ArrayList recListUI = new ArrayList<String>();
     private ArrayAdapter adapter;
     private ListView listV;
     private String selected;
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         /* Permissions requests external storage writing and recording audio */
 
-        fileExists();
+        fileExists(true);
 
 
     }
@@ -113,14 +112,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         adapter.notifyDataSetChanged();
         rec.delete();
     }
-    public void fileExists() {
+    public void fileExists(boolean curRec) {
         adapter.clear();
         this.recList = new ArrayList<>();
+        File recFile;  //= new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder_1.3gp");
+        String temp;
+        temp = "/EasyAudioRecorder/EasyAudioRecorder_1.3gp";
         /*
-        File recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder_1.3gp");
-        String temp = "/EasyAudioRecorder/EasyAudioRecorder.3gp";
-        this.recList.add(temp.substring(19));
-        */
+        if (!curRec) {
+
+            temp = "/EasyAudioRecorder/EasyAudioRecorder_1.3gp";
+            this.recList.add(temp.substring(19));
+        }*/
+
+        /*
         String path = Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/";
         File folder = new File(path);
         File files[] = folder.listFiles();
@@ -128,14 +133,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         int j;
         for (j = 0; j < files.length; j++) {
             tempFiles.add(files[j].getName());
-        }
+        }*/
 
         /* THIS PART IS NOT WORKING */
+        /*
         if (files.length > 0) {
             mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + Integer.valueOf(files[files.length-1].getName().substring(18, 20)) + 1 + ".3gp";
         } else {
             mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder_001.3gp";
-        }
+        }*/
         /*
         if (j + 1 < 10) {
             mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + "00" + (j + 1) + ".3gp";
@@ -145,14 +151,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (j + 1) + ".3gp";
         }
         */
+        /*
         for (String b : tempFiles) {
             recList.add(b);
         }
         adapter.addAll(recList);
         adapter.notifyDataSetChanged();
+        */
 
-        /*
-        int i = 2;
+        int i = 1;
+        recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
         while(recFile.exists()) {
             recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
 
@@ -161,14 +169,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             i++;
         }
+
+        //this.recList.add(temp.substring(19));
         if (i > 1) {
-            mFile = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mFile += "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i - 1) + ".3gp";
+            mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i - 1) + ".3gp";
             recList.remove(recList.size() - 1);
+        } else {
+            mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i) + ".3gp";
         }
         adapter.addAll(recList);
         adapter.notifyDataSetChanged();
-        */
+
     }
     /* called as a result of user selection of run time permissions request */
     @Override
@@ -219,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (micPermission && extStoragePermission) {
             if (!recording) {
 
-                fileExists();
+                fileExists(true);
 
                 mRecorder = new MediaRecorder();
                 mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -245,6 +256,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mRecorder = null;
         recButton.setText("Record");
         recording = false;
-        fileExists();
+        fileExists(false);
     }
 }
