@@ -17,9 +17,8 @@
         android:id="@+id/buttonRecord"
         android:clickable="false"
         android:onClick="recordAudio"
-        android:layout_marginStart="52dp"
         android:layout_alignTop="@+id/buttonPlay"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/adView" />
 
     <Button
         android:layout_width="wrap_content"
@@ -29,10 +28,9 @@
         android:clickable="true"
         android:nestedScrollingEnabled="false"
         android:onClick="startPlayback"
-        android:layout_marginBottom="78dp"
-        android:layout_marginEnd="52dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginBottom="27dp"
+        android:layout_above="@+id/adView"
+        android:layout_centerHorizontal="true" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -43,4 +41,20 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/buttonDelete"
+        android:layout_alignTop="@+id/buttonPlay"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/buttonRecord" />
 </RelativeLayout>
