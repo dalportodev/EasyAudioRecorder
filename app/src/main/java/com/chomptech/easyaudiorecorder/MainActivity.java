@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         /* Permissions requests external storage writing and recording audio */
 
-        fileExists(true);
+        fileExists();
 
 
     }
@@ -112,12 +112,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         adapter.notifyDataSetChanged();
         rec.delete();
     }
-    public void fileExists(boolean curRec) {
-        adapter.clear();
-        this.recList = new ArrayList<>();
-        File recFile;  //= new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder_1.3gp");
-        String temp;
-        temp = "/EasyAudioRecorder/EasyAudioRecorder_1.3gp";
+    public void fileExists() {
+        if (micPermission && extStoragePermission) {
+            {
+                adapter.clear();
+                this.recList = new ArrayList<>();
+                File recFile;  //= new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder_1.3gp");
+                String temp;
+                temp = "/EasyAudioRecorder/EasyAudioRecorder_1.3gp";
+                File folder = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/");
+                File files[] = folder.listFiles();
         /*
         if (!curRec) {
 
@@ -159,27 +163,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         adapter.notifyDataSetChanged();
         */
 
-        int i = 1;
-        recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
-        while(recFile.exists()) {
-            recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
+                int i = 1;
+                recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
 
-            temp = "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp";
-            this.recList.add(temp.substring(19));
+                while (recFile.exists()) { //this.recList.size() < files.length
+                    recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
+                    temp = "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp";
+                    //if (recFile.exists()) {
 
-            i++;
+
+                        this.recList.add(temp.substring(19));
+                        i++;
+                    //}
+                }
+
+                if (i > 1) {
+                    mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i - 1) + ".3gp";
+                    recList.remove(recList.size() - 1);
+                } else {
+                    mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i) + ".3gp";
+                    //this.recList.add(temp.substring(19));
+                }
+                adapter.addAll(recList);
+                adapter.notifyDataSetChanged();
+            }
         }
-
-        //this.recList.add(temp.substring(19));
-        if (i > 1) {
-            mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i - 1) + ".3gp";
-            recList.remove(recList.size() - 1);
-        } else {
-            mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (i) + ".3gp";
-        }
-        adapter.addAll(recList);
-        adapter.notifyDataSetChanged();
-
     }
     /* called as a result of user selection of run time permissions request */
     @Override
@@ -230,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (micPermission && extStoragePermission) {
             if (!recording) {
 
-                fileExists(true);
+                fileExists();
 
                 mRecorder = new MediaRecorder();
                 mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -256,6 +264,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mRecorder = null;
         recButton.setText("Record");
         recording = false;
-        fileExists(false);
+        fileExists();
     }
 }
