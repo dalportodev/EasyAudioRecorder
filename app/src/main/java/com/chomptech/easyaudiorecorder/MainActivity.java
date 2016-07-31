@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 int i = 1;
                 recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
 
-                while (recFile.exists() || recList.size() < files.length-1) { //this.recList.size() < files.length
+                while (recFile.exists() || recList.size() < files.length) { //this.recList.size() < files.length
                     recFile = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp");
                     temp = "/EasyAudioRecorder/EasyAudioRecorder" + "_" + i + ".3gp";
 
