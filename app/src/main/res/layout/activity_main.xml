@@ -28,9 +28,9 @@
         android:clickable="true"
         android:nestedScrollingEnabled="false"
         android:onClick="startPlayback"
-        android:layout_marginBottom="27dp"
+        android:layout_marginBottom="56dp"
         android:layout_above="@+id/adView"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignStart="@+id/buttonShare" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -58,4 +58,12 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/buttonRecord" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:id="@+id/buttonShare"
+        android:layout_below="@+id/buttonDelete"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
