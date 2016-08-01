@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 fileList[a] = "";
         }
         /* Checks if any files exist, playing recording set to false */
-        fileExists(true);
+        fileExists(false);
     }
     public void delete(View view) {
 
@@ -208,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (!playing) {
                 mPlayer = new MediaPlayer();
                 try {
+                    if (!new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/" + mFile).exists()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording from the list above.", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     mPlayer.setDataSource(mFile);
                     mPlayer.prepare();
                     mPlayer.start();
