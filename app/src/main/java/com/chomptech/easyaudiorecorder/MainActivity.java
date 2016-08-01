@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (!playing) {
                 mPlayer = new MediaPlayer();
                 try {
+                    /* This is because after fileExists(), current mFile is always one increment ahead unless set by listView click listener */
                     if (!new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/" + mFile).exists()) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording from the list above.", Toast.LENGTH_SHORT);
                         toast.show();
