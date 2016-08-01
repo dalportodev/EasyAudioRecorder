@@ -130,19 +130,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             playButton.setText("Play");
             playing = false;
         }
-        /* Clear listView */
-        adapter.clear();
 
         /* Perform deletion task */
         File rec = new File(mFile);
-        fileList[Integer.valueOf(selected.substring(18,21))] = "";
-        for (String st : fileList) {
-            if (!st.equals("")) {
-                adapter.add(st);
+        if (rec.exists()) {
+            /* Clear listView */
+            adapter.clear();
+            fileList[Integer.valueOf(selected.substring(18, 21))] = "";
+            for (String st : fileList) {
+                if (!st.equals("")) {
+                    adapter.add(st);
+                }
             }
+            adapter.notifyDataSetChanged();
+            rec.delete();
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to delete from the list above.", Toast.LENGTH_SHORT);
+            toast.show();
         }
-        adapter.notifyDataSetChanged();
-        rec.delete();
     }
     public void fileExists(boolean rec) {
         if (micPermission && extStoragePermission) {
@@ -210,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 mPlayer = new MediaPlayer();
                 try {
                     /* This is because after fileExists(), current mFile is always one increment ahead unless set by listView click listener */
-                    if (!new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/" + mFile).exists()) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording from the list above.", Toast.LENGTH_SHORT);
+                    if (!new File(mFile).exists()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to play from the list above.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                     mPlayer.setDataSource(mFile);
