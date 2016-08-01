@@ -36,44 +36,47 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean playing = false;
     private Button recButton;
     private Button playButton;
-
-    private GregorianCalendar cal;
     private final int REQUEST_AUDIO_AND_STORAGE = 0;
     private boolean micPermission;
     private boolean extStoragePermission;
-    private ArrayList recList = new ArrayList<String>();
     private ArrayAdapter adapter;
     private ListView listV;
     private String selected;
 
     private String[] fileList = new String[999];
+    private ArrayList recList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* Initialize Admob */
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9999083812241050~5402406839");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        /* Get permissions */
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO},
                     REQUEST_AUDIO_AND_STORAGE);
         } else {
+            /* If failed to obtain permissions, program will be aware of it */
             extStoragePermission = true;
             micPermission = true;
         }
 
+        /* UI Assignments */
         playButton = (Button)findViewById(R.id.buttonPlay);
         recButton = (Button)findViewById(R.id.buttonRecord);
         listV = (ListView)findViewById(R.id.listView);
         adapter = new ArrayAdapter<>(MainActivity.this, R.layout.simplerow, recList);
         listV.setAdapter(adapter);
 
+        /* Set up listView click listener to select files */
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -92,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        /* Sets file directory */
         File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder");
+        /* If folder doesn't exists, creates it */
         if (!folder.exists()) {
             try {
                 folder.mkdir();
@@ -109,10 +114,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         for (int a = 0; a < fileList.length; a++) {
                 fileList[a] = "";
         }
-        fileExists(false);
+        /* Checks if any files exist, playing recording set to false */
+        fileExists(true);
     }
     public void delete(View view) {
 
+        /* If playing, sets mPlayer to null and changes button back to play */
         if (mPlayer  != null) {
             mPlayer.release();
             mPlayer = null;
@@ -122,7 +129,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             playButton.setText("Play");
             playing = false;
         }
+        /* Clear listView */
         adapter.clear();
+
+        /* Perform deletion task */
         File rec = new File(mFile);
         fileList[Integer.valueOf(selected.substring(18,21))] = "";
         for (String st : fileList) {
@@ -136,20 +146,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void fileExists(boolean rec) {
         if (micPermission && extStoragePermission) {
             {
-                if (!rec) {
-                    adapter.clear();
-                }
+
+                /* Get list of files current in directory */
                 File folder = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/");
                 File files[] = folder.listFiles();
 
+                /* Assign files in directory to indices in 2nd array corresponding with file name */
                 for (int j = 0; j < files.length; j++) {
                     fileList[Integer.valueOf(files[j].getName().substring(18,21))] = files[j].getName();
                 }
 
+                /* Finds first value in tracking array not holding a file name */
                 int k = 1;
                 while(fileList[k] != "") {
                     k++;
                 }
+                /* Sets up new file name based on counted files */
                 if (k < 10) {
                     mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_00" + (k) + ".3gp";
                 } else if (k <100) {
@@ -157,7 +169,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 } else {
                     mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (k) + ".3gp";
                 }
+
+                /* Updates adapter for listView */
                 if (!rec) {
+                    adapter.clear();
                     for (String st : fileList) {
                         if (!st.equals("")) {
                             adapter.add(st);
@@ -198,6 +213,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     mPlayer.start();
                     playing = true;
                     playButton.setText("Stop");
+                    mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            mPlayer.release();
+                            mPlayer = null;
+                            playButton.setText("Play");
+                            playing = false;
+                        }
+                    });
+                    /* When audio file is finished, releases mPlayer and resets play button */
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Prepare() failed");
                 }
