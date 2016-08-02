@@ -30,7 +30,7 @@
         android:onClick="startPlayback"
         android:layout_marginBottom="56dp"
         android:layout_above="@+id/adView"
-        android:layout_alignStart="@+id/buttonShare" />
+        android:layout_alignStart="@+id/buttonSend" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -62,8 +62,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share"
-        android:id="@+id/buttonShare"
+        android:text="Send"
+        android:id="@+id/buttonSend"
         android:layout_below="@+id/buttonDelete"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="shareRec" />
 </RelativeLayout>

@@ -1,14 +1,17 @@
 package com.chomptech.easyaudiorecorder;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -118,6 +121,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         /* Checks if any files exist, playing recording set to false */
         fileExists(false);
     }
+
+    public void shareRec(View view) {
+
+        File rec = new File(mFile);
+        if (rec.exists()) {
+            Uri uri = Uri.fromFile(rec);
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setType("audio/*");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(shareIntent, "Share recording to..."));
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to send from the list above.", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
     public void delete(View view) {
 
         /* If playing, sets mPlayer to null and changes button back to play */
@@ -131,19 +151,37 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             playing = false;
         }
 
+
         /* Perform deletion task */
-        File rec = new File(mFile);
+        final File rec = new File(mFile);
         if (rec.exists()) {
-            /* Clear listView */
-            adapter.clear();
-            fileList[Integer.valueOf(selected.substring(18, 21))] = "";
-            for (String st : fileList) {
-                if (!st.equals("")) {
-                    adapter.add(st);
+            AlertDialog.Builder delConf = new AlertDialog.Builder(this)
+                    .setMessage("Are you sure?");
+
+            delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    /* Clear listView */
+                    adapter.clear();
+                    fileList[Integer.valueOf(selected.substring(18, 21))] = "";
+                    for (String st : fileList) {
+                        if (!st.equals("")) {
+                            adapter.add(st);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    rec.delete();
                 }
-            }
-            adapter.notifyDataSetChanged();
-            rec.delete();
+            })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .show();
+
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to delete from the list above.", Toast.LENGTH_SHORT);
             toast.show();
