@@ -122,76 +122,86 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void shareRec(View view) {
 
-        if (mPlayer  != null) {
-            mPlayer.release();
-            mPlayer = null;
-            playButton.setText("Play");
-            playing = false;
-        } else {
-            playButton.setText("Play");
-            playing = false;
-        }
+        if (!recording) {
+            if (mPlayer != null) {
+                mPlayer.release();
+                mPlayer = null;
+                playButton.setText("Play");
+                playing = false;
+            } else {
+                playButton.setText("Play");
+                playing = false;
+            }
 
-        File rec = new File(mFile);
-        if (rec.exists()) {
-            Uri uri = Uri.fromFile(rec);
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.setType("audio/*");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(shareIntent, "Share recording to..."));
+            File rec = new File(mFile);
+            if (rec.exists()) {
+                Uri uri = Uri.fromFile(rec);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("audio/*");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(shareIntent, "Share recording to..."));
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to send from the list above.", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to send from the list above.", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before sharing.", Toast.LENGTH_LONG);
             toast.show();
         }
     }
 
     public void delete(View view) {
 
+        if (!recording) {
         /* If playing, sets mPlayer to null and changes button back to play */
-        if (mPlayer  != null) {
-            mPlayer.release();
-            mPlayer = null;
-            playButton.setText("Play");
-            playing = false;
-        } else {
-            playButton.setText("Play");
-            playing = false;
-        }
+            if (mPlayer != null) {
+                mPlayer.release();
+                mPlayer = null;
+                playButton.setText("Play");
+                playing = false;
+            } else {
+                playButton.setText("Play");
+                playing = false;
+            }
 
 
         /* Perform deletion task */
-        final File rec = new File(mFile);
-        if (rec.exists()) {
-            AlertDialog.Builder delConf = new AlertDialog.Builder(this)
-                    .setMessage("Are you sure you want to delete " + rec.getName() + "?");
+            final File rec = new File(mFile);
+            if (rec.exists()) {
+                AlertDialog.Builder delConf = new AlertDialog.Builder(this)
+                        .setMessage("Are you sure you want to delete " + rec.getName() + "?");
 
-            delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                     /* Clear listView */
-                    adapter.clear();
-                    fileList[Integer.valueOf(selected.substring(18, 21))] = "";
-                    for (String st : fileList) {
-                        if (!st.equals("")) {
-                            adapter.add(st);
+                        adapter.clear();
+                        fileList[Integer.valueOf(selected.substring(18, 21))] = "";
+                        for (String st : fileList) {
+                            if (!st.equals("")) {
+                                adapter.add(st);
+                            }
                         }
+                        adapter.notifyDataSetChanged();
+                        rec.delete();
                     }
-                    adapter.notifyDataSetChanged();
-                    rec.delete();
-                }
-            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                        }
-                    })
-                    .show();
+                            }
+                        })
+                        .show();
 
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to delete from the list above.", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to delete from the list above.", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before deleting.", Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -257,34 +267,39 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void startPlayback(View view) {
         if (micPermission && extStoragePermission) {
-            if (!playing) {
-                mPlayer = new MediaPlayer();
-                try {
+            if (!recording) {
+                if (!playing) {
+                    mPlayer = new MediaPlayer();
+                    try {
                     /* This is because after fileExists(), current mFile is always one increment ahead unless set by listView click listener */
-                    if (!new File(mFile).exists()) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Please tap a recording to play from the list above.", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                    mPlayer.setDataSource(mFile);
-                    mPlayer.prepare();
-                    mPlayer.start();
-                    playing = true;
-                    playButton.setText("Stop");
-                    mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            mPlayer.release();
-                            mPlayer = null;
-                            playButton.setText("Play");
-                            playing = false;
+                        if (!new File(mFile).exists()) {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to play from the list above.", Toast.LENGTH_LONG);
+                            toast.show();
                         }
-                    });
+                        mPlayer.setDataSource(mFile);
+                        mPlayer.prepare();
+                        mPlayer.start();
+                        playing = true;
+                        playButton.setText("Stop");
+                        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mediaPlayer) {
+                                mPlayer.release();
+                                mPlayer = null;
+                                playButton.setText("Play");
+                                playing = false;
+                            }
+                        });
                     /* When audio file is finished, releases mPlayer and resets play button */
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Prepare() failed");
+                    } catch (IOException e) {
+                        Log.e(LOG_TAG, "Prepare() failed");
+                    }
+                } else {
+                    stopPlayback();
                 }
             } else {
-                stopPlayback();
+                Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before playback.", Toast.LENGTH_LONG);
+                toast.show();
             }
         }
     }
@@ -332,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         try {
             mRecorder.stop();
         } catch (Exception e) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Stop button pressed too quickly!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Stop button pressed too quickly!", Toast.LENGTH_LONG);
             toast.show();
             File recF = new File(mFile);
             recF.delete();
