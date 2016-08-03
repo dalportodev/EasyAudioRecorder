@@ -38,11 +38,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private MediaPlayer mPlayer = null;
     private boolean recording = false;
     private boolean playing = false;
-    private Button recButton;
-    private Button playButton;
+    private Button recButton, playButton;
     private final int REQUEST_AUDIO_AND_STORAGE = 0;
-    private boolean micPermission;
-    private boolean extStoragePermission;
+    private boolean micPermission, extStoragePermission;
     private ArrayAdapter adapter;
     private ListView listV;
     private String selected;
@@ -124,6 +122,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void shareRec(View view) {
 
+        if (mPlayer  != null) {
+            mPlayer.release();
+            mPlayer = null;
+            playButton.setText("Play");
+            playing = false;
+        } else {
+            playButton.setText("Play");
+            playing = false;
+        }
+
         File rec = new File(mFile);
         if (rec.exists()) {
             Uri uri = Uri.fromFile(rec);
@@ -156,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         final File rec = new File(mFile);
         if (rec.exists()) {
             AlertDialog.Builder delConf = new AlertDialog.Builder(this)
-                    .setMessage("Are you sure?");
+                    .setMessage("Are you sure you want to delete " + rec.getName() + "?");
 
             delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -321,11 +329,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
     public void stopRecording() {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
-        recButton.setText("Record");
-        recording = false;
-        fileExists(false);
+        try {
+            mRecorder.stop();
+        } catch (Exception e) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Stop button pressed too quickly!", Toast.LENGTH_SHORT);
+            toast.show();
+            File recF = new File(mFile);
+            recF.delete();
+        } finally {
+            mRecorder.release();
+            mRecorder = null;
+            recButton.setText("Record");
+            recording = false;
+            fileExists(false);
+        }
     }
 }
