@@ -28,7 +28,7 @@
         android:clickable="true"
         android:nestedScrollingEnabled="false"
         android:onClick="startPlayback"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="80dp"
         android:layout_above="@+id/adView"
         android:layout_alignStart="@+id/buttonSend" />
 
@@ -64,7 +64,8 @@
         android:layout_height="wrap_content"
         android:text="Send"
         android:id="@+id/buttonSend"
-        android:layout_below="@+id/buttonDelete"
+        android:onClick="shareRec"
+        android:layout_above="@+id/adView"
         android:layout_centerHorizontal="true"
-        android:onClick="shareRec" />
+        android:layout_marginBottom="17dp" />
 </RelativeLayout>
