@@ -217,6 +217,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 for (int j = 0; j < files.length; j++) {
                     fileList[Integer.valueOf(files[j].getName().substring(18,21))] = files[j].getName();
                 }
+                /* code to store renamed file names into the fileList !!!!
+                int numRenamed = 0;
+                if (!files[j].getName().substring(0,17).equals("EasyAudioRecorder_")) {
+                fileList[fileList.length - numRenamed] = files[j].getName();
+                numRenamed++;
+                }
+                 */
 
                 /* Finds first value in tracking array not holding a file name */
                 int k = 1;
