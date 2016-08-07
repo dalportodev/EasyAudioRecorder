@@ -18,7 +18,7 @@
         android:clickable="false"
         android:onClick="recordAudio"
         android:layout_alignTop="@+id/buttonPlay"
-        android:layout_alignStart="@+id/adView" />
+        android:layout_alignStart="@+id/buttonSend" />
 
     <Button
         android:layout_width="wrap_content"
@@ -28,9 +28,8 @@
         android:clickable="true"
         android:nestedScrollingEnabled="false"
         android:onClick="startPlayback"
-        android:layout_marginBottom="80dp"
-        android:layout_above="@+id/adView"
-        android:layout_alignStart="@+id/buttonSend" />
+        android:layout_alignTop="@+id/buttonDelete"
+        android:layout_centerHorizontal="true" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -48,8 +47,9 @@
         android:text="Delete"
         android:id="@+id/buttonDelete"
         android:onClick="delete"
-        android:layout_alignTop="@+id/buttonPlay"
-        android:layout_alignEnd="@+id/adView" />
+        android:layout_above="@+id/buttonRename"
+        android:layout_alignEnd="@+id/adView"
+        android:layout_marginBottom="7dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -65,7 +65,16 @@
         android:text="Send"
         android:id="@+id/buttonSend"
         android:onClick="shareRec"
+        android:layout_below="@+id/buttonDelete"
+        android:layout_alignStart="@+id/adView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rename"
+        android:id="@+id/buttonRename"
         android:layout_above="@+id/adView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp" />
+        android:layout_alignStart="@+id/buttonDelete"
+        android:layout_marginBottom="7dp"
+        android:onClick="renameFile" />
 </RelativeLayout>

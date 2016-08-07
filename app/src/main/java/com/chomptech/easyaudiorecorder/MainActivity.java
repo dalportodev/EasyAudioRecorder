@@ -15,10 +15,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean micPermission, extStoragePermission;
     private ArrayAdapter adapter;
     private ListView listV;
-    private String selected;
+    private String renameTemp;
 
     private String[] fileList = new String[999];
     private ArrayList recList = new ArrayList<>();
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mFile = Environment.getExternalStorageDirectory().getAbsolutePath() +"/EasyAudioRecorder/" + listV.getItemAtPosition(i);
-                selected = (String)listV.getItemAtPosition(i);
                 /* To change play button back to stop and quit playing audio */
                 if (mPlayer  != null) {
                     mPlayer.release();
@@ -113,9 +114,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         /* Permissions requests external storage writing and recording audio */
-        for (int a = 0; a < fileList.length; a++) {
-                fileList[a] = "";
-        }
+
         /* Checks if any files exist, playing recording set to false */
         fileExists(false);
     }
@@ -176,16 +175,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                    /* Clear listView */
-                        adapter.clear();
-                        fileList[Integer.valueOf(selected.substring(18, 21))] = "";
-                        for (String st : fileList) {
-                            if (!st.equals("")) {
-                                adapter.add(st);
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
                         rec.delete();
+                        fileExists(false);
+
                     }
                 })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -212,19 +204,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 /* Get list of files current in directory */
                 File folder = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/");
                 File files[] = folder.listFiles();
-
+                /* re initialize array elements to "" for algorithm */
+                for (int a = 0; a < fileList.length; a++) {
+                    fileList[a] = "";
+                }
+                int numRenamed = 1;
                 /* Assign files in directory to indices in 2nd array corresponding with file name */
                 for (int j = 0; j < files.length; j++) {
-                    fileList[Integer.valueOf(files[j].getName().substring(18,21))] = files[j].getName();
+                    if (files[j].getName().length() == 25) {
+                        if (files[j].getName().substring(0, 18).equals("EasyAudioRecorder_")) {
+                            fileList[Integer.valueOf(files[j].getName().substring(18, 21))] = files[j].getName();
+                        } else {
+                            fileList[fileList.length - numRenamed] = files[j].getName();
+                            numRenamed++;
+                        }
+                    } else {
+                        fileList[fileList.length - numRenamed] = files[j].getName();
+                        numRenamed++;
+                    }
                 }
-                /* code to store renamed file names into the fileList !!!!
-                int numRenamed = 0;
-                if (!files[j].getName().substring(0,17).equals("EasyAudioRecorder_")) {
-                fileList[fileList.length - numRenamed] = files[j].getName();
-                numRenamed++;
-                }
-                 */
-
                 /* Finds first value in tracking array not holding a file name */
                 int k = 1;
                 while(fileList[k] != "") {
@@ -251,6 +249,44 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         }
+    }
+    public void renameFile(View view) {
+        File rec = new File(mFile);
+        if (rec.exists()) {
+            showRenameDialog();
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to rename from the list above.", Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+    }
+
+    public void showRenameDialog() {
+        LayoutInflater layInf = LayoutInflater.from(this);
+        View prompt = layInf.inflate(R.layout.inputdialog, null);
+        AlertDialog.Builder alertDial = new AlertDialog.Builder(this);
+        alertDial.setView(prompt);
+
+        final EditText editText = (EditText) prompt.findViewById(R.id.edittext);
+
+        alertDial.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        renameTemp = editText.getText().toString() + ".3gp";
+                        File rec = new File(mFile);
+                        rec.renameTo(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/" + renameTemp));
+                        fileExists(false);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        AlertDialog rename = alertDial.create();
+        rename.show();
     }
     /* called as a result of user selection of run time permissions request */
     @Override
