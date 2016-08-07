@@ -118,6 +118,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         /* Checks if any files exist, playing recording set to false */
         fileExists(false);
     }
+    @Override
+    public void onBackPressed() {
+        if (recording) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before closing.", Toast.LENGTH_LONG);
+            toast.show();
+        } else if (playing) {
+            stopPlayback();
+            finish();
+        } else {
+            finish();
+        }
+    }
 
     public void shareRec(View view) {
 
