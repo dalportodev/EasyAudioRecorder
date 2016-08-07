@@ -121,8 +121,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onBackPressed() {
         if (recording) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before closing.", Toast.LENGTH_LONG);
-            toast.show();
+            AlertDialog.Builder delConf = new AlertDialog.Builder(this)
+                    .setMessage("Do you want to stop recording?");
+
+            delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    stopRecording();
+                    finish();
+                }
+            })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .show();
         } else if (playing) {
             stopPlayback();
             finish();
