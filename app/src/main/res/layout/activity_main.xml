@@ -77,4 +77,13 @@
         android:layout_alignStart="@+id/buttonDelete"
         android:layout_marginBottom="7dp"
         android:onClick="renameFile" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/recording"
+        android:layout_alignBottom="@+id/buttonSend"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"/>
 </RelativeLayout>
