@@ -1,6 +1,7 @@
 package com.chomptech.easyaudiorecorder;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -308,8 +309,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     public void onClick(DialogInterface dialogInterface, int i) {
                         renameTemp = editText.getText().toString() + ".3gp";
                         File rec = new File(mFile);
-                        rec.renameTo(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/" + renameTemp));
-                        fileExists(false);
+                        File newFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/" + renameTemp);
+                        if (!newFile.exists()) {
+                            rec.renameTo(newFile);
+                            fileExists(false);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Naming conflict, please choose a different file name.", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
