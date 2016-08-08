@@ -279,11 +279,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
     public void renameFile(View view) {
-        File rec = new File(mFile);
-        if (rec.exists()) {
-            showRenameDialog();
+        if (!recording) {
+            File rec = new File(mFile);
+            if (rec.exists()) {
+                showRenameDialog();
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to rename from the list above.", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to rename from the list above.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to end recording before renaming the file.", Toast.LENGTH_LONG);
             toast.show();
         }
 
