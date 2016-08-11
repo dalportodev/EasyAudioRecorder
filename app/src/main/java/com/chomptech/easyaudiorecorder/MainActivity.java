@@ -18,10 +18,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ArrayAdapter adapter;
     private ListView listV;
     private String renameTemp;
+    private ImageView recImg;
+    private Animation flashing;
 
     private String[] fileList = new String[999];
     private ArrayList recList = new ArrayList<>();
@@ -77,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         /* UI Assignments */
         playButton = (Button)findViewById(R.id.buttonPlay);
         recButton = (Button)findViewById(R.id.buttonRecord);
+        recImg = (ImageView)findViewById(R.id.imageViewRec);
+        flashing = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flashing_animation);
         listV = (ListView)findViewById(R.id.listView);
         adapter = new ArrayAdapter<>(MainActivity.this, R.layout.simplerow, recList);
         listV.setAdapter(adapter);
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mFile = Environment.getExternalStorageDirectory().getAbsolutePath() +"/EasyAudioRecorder/" + listV.getItemAtPosition(i);
+                mFile = Environment.getExternalStorageDirectory().getAbsolutePath() +"/EasyAudioRecorder/" + listV.getItemAtPosition(i) + ".3gp";
                 /* To change play button back to stop and quit playing audio */
                 if (mPlayer  != null) {
                     mPlayer.release();
@@ -198,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             final File rec = new File(mFile);
             if (rec.exists()) {
                 AlertDialog.Builder delConf = new AlertDialog.Builder(this)
-                        .setMessage("Are you sure you want to delete " + rec.getName() + "?");
+                        .setMessage("Are you sure you want to delete " + rec.getName().substring(0, rec.getName().length() - 4) + "?");
 
                 delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -271,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     adapter.clear();
                     for (String st : fileList) {
                         if (!st.equals("")) {
-                            adapter.add(st);
+                            adapter.add(st.substring(0, st.length() - 4));
                         }
                     }
                     adapter.notifyDataSetChanged();
@@ -421,6 +428,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
                 mRecorder.start();
                 recording = true;
+                recImg.startAnimation(flashing);
                 recButton.setText("Stop");
             } else {
                 stopRecording();
@@ -440,6 +448,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             mRecorder = null;
             recButton.setText("Record");
             recording = false;
+            recImg.clearAnimation();
+            recImg.setVisibility(View.INVISIBLE);
             fileExists(false);
         }
     }
