@@ -288,7 +288,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
     public void renameFile(View view) {
         if (!recording) {
+
+            if (mPlayer != null) {
+                mPlayer.release();
+                mPlayer = null;
+                playButton.setText("Play");
+                playing = false;
+            } else {
+                playButton.setText("Play");
+                playing = false;
+            }
+
             File rec = new File(mFile);
+
             if (rec.exists()) {
                 showRenameDialog();
             } else {
