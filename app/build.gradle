@@ -8,8 +8,8 @@ android {
         applicationId "com.chomptech.easyaudiorecorder"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 18
-        versionName "2.4.7"
+        versionCode 19
+        versionName "2.4.8"
     }
     buildTypes {
         release {
