@@ -278,7 +278,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     adapter.clear();
                     for (String st : fileList) {
                         if (!st.equals("")) {
-                            adapter.add(st.substring(0, st.length() - 4));
+                            if (st.substring(st.length() - 4, st.length()).equals(".3gp")) {
+                                adapter.add(st.substring(0, st.length() - 4));
+                            } else {
+
+                            }
+                        } else {
+
                         }
                     }
                     adapter.notifyDataSetChanged();

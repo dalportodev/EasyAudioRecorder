@@ -57,7 +57,8 @@
         android:id="@+id/listView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/buttonRecord" />
+        android:layout_above="@+id/buttonRecord"
+        android:background="#FFFFFF" />
 
     <Button
         android:layout_width="wrap_content"
