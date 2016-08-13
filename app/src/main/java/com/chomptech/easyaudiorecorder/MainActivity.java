@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private MediaPlayer mPlayer = null;
     private boolean recording = false;
     private boolean playing = false;
-    private Button recButton, playButton;
+    private Button recButton;
     private final int REQUEST_AUDIO_AND_STORAGE = 0;
     private boolean micPermission, extStoragePermission;
     private ArrayAdapter adapter;
@@ -94,9 +94,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mFile = Environment.getExternalStorageDirectory().getAbsolutePath() +"/EasyAudioRecorder/" + listV.getItemAtPosition(i) + ".3gp";
                 /* To change play button back to stop and quit playing audio */
-                if (mPlayer  != null) {
-                    mPlayer.release();
-                    mPlayer = null;
+                if (playing) {
+                    stopPlayback();
                     //playButton.setText("Play");
                     //playing = false;
                 } else {
@@ -168,10 +167,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (mPlayer != null) {
                 mPlayer.release();
                 mPlayer = null;
-                playButton.setText("Play");
+                recButton.setText("    Record    ");
                 playing = false;
             } else {
-                playButton.setText("Play");
+                recButton.setText("    Record    ");
                 playing = false;
             }
 
@@ -197,15 +196,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (!recording) {
         /* If playing, sets mPlayer to null and changes button back to play */
-            if (mPlayer != null) {
-                mPlayer.release();
-                mPlayer = null;
-                playButton.setText("Play");
-                playing = false;
-            } else {
-                playButton.setText("Play");
-                playing = false;
-            }
+           if (playing) {
+               stopPlayback();
+           }  else {
+
+           }
 
 
         /* Perform deletion task */
@@ -243,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void fileExists(boolean rec) {
         if (micPermission && extStoragePermission) {
             {
-
                 /* Get list of files current in directory */
                 File folder = new File(Environment.getExternalStorageDirectory() + "/EasyAudioRecorder/");
                 File files[] = folder.listFiles();
@@ -302,14 +296,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void renameFile(View view) {
         if (!recording) {
 
-            if (mPlayer != null) {
-                mPlayer.release();
-                mPlayer = null;
-                playButton.setText("Play");
-                playing = false;
+            if (playing) {
+                stopPlayback();
             } else {
-                playButton.setText("Play");
-                playing = false;
+
             }
 
             File rec = new File(mFile);
@@ -396,13 +386,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         mPlayer.prepare();
                         mPlayer.start();
                         playing = true;
-                        playButton.setText("Stop");
+                        recButton.setText("       Stop      ");
                         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @Override
                             public void onCompletion(MediaPlayer mediaPlayer) {
                                 mPlayer.release();
                                 mPlayer = null;
-                                playButton.setText("Play");
+                                recButton.setText("    Record    ");
                                 playing = false;
                             }
                         });
@@ -422,41 +412,41 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void stopPlayback() {
         mPlayer.release();
         mPlayer = null;
-        playButton.setText("Play");
+        recButton.setText("    Record    ");
         playing = false;
     }
 
     public void recordAudio(View view) {
         if (micPermission && extStoragePermission) {
-            if (!recording) {
-
-                if (mPlayer  != null) {
-                    mPlayer.release();
-                    mPlayer = null;
-                    playButton.setText("Play");
-                    playing = false;
-                } else {
-                    playButton.setText("Play");
-                    playing = false;
-                }
-                fileExists(true);
-
-                mRecorder = new MediaRecorder();
-                mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                mRecorder.setOutputFile(mFile);
-                mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                try {
-                    mRecorder.prepare();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "prepare() failed");
-                }
-                mRecorder.start();
-                recording = true;
-                recImg.startAnimation(flashing);
-                recButton.setText("Stop");
+            if (playing) {
+                stopPlayback();
             } else {
-                stopRecording();
+                if (!recording) {
+
+                    if (playing) {
+                        stopPlayback();
+                    } else {
+
+                    }
+                    fileExists(true);
+
+                    mRecorder = new MediaRecorder();
+                    mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mRecorder.setOutputFile(mFile);
+                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    try {
+                        mRecorder.prepare();
+                    } catch (IOException e) {
+                        Log.e(LOG_TAG, "prepare() failed");
+                    }
+                    mRecorder.start();
+                    recording = true;
+                    recImg.startAnimation(flashing);
+                    recButton.setText("       Stop      ");
+                } else {
+                    stopRecording();
+                }
             }
         }
     }
@@ -471,7 +461,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } finally {
             mRecorder.release();
             mRecorder = null;
-            recButton.setText("Record");
+            recButton.setText("    Record    ");
             recording = false;
             recImg.clearAnimation();
             recImg.setVisibility(View.INVISIBLE);
