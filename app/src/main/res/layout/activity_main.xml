@@ -72,8 +72,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageViewRec"
         android:src="@drawable/recording"
-        android:layout_alignBottom="@+id/buttonSend"
+        android:visibility="invisible"
+        android:layout_alignTop="@+id/buttonRecord"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:visibility="invisible"/>
+        android:layout_alignBottom="@+id/buttonDelete" />
 </RelativeLayout>

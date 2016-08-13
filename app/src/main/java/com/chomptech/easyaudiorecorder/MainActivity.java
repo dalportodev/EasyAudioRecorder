@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         /* Checks if any files exist, playing recording set to false */
         fileExists(false);
         if (recList.size() < 2) {
-            Toast toast = Toast.makeText(getApplicationContext(), "After a recording is created, it will play when pressed in the list above.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "After a recording is created, it will play when selected from the list above.", Toast.LENGTH_LONG);
             toast.show();
         } else {
 
@@ -330,14 +330,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         renameTemp = editText.getText().toString() + ".3gp";
-                        File rec = new File(mFile);
-                        File newFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/" + renameTemp);
-                        if (!newFile.exists()) {
-                            rec.renameTo(newFile);
-                            fileExists(false);
+                        if (!editText.getText().toString().contains("/")) {
+                            if (!editText.getText().toString().equals("")) {
+                                File rec = new File(mFile);
+                                File newFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/" + renameTemp);
+                                if (!newFile.exists()) {
+                                    rec.renameTo(newFile);
+                                    fileExists(false);
+                                } else {
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Naming conflict, please choose a different file name.", Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
+                            } else {
+                                Toast toast2 = Toast.makeText(getApplicationContext(), "File rename failed, please try again.", Toast.LENGTH_LONG);
+                                toast2.show();
+                            }
                         } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Naming conflict, please choose a different file name.", Toast.LENGTH_LONG);
-                            toast.show();
+                            Toast toast3 = Toast.makeText(getApplicationContext(), "File names with / are not allowed.", Toast.LENGTH_LONG);
+                            toast3.show();
                         }
 
                     }

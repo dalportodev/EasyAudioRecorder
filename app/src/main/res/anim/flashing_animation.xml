@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <alpha
-        android:duration="400"
+        android:duration="600"
         android:fromAlpha="0.0"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:repeatCount="infinite"
