@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         /* UI Assignments */
-        playButton = (Button)findViewById(R.id.buttonPlay);
+        //playButton = (Button)findViewById(R.id.buttonPlay);
         recButton = (Button)findViewById(R.id.buttonRecord);
         recImg = (ImageView)findViewById(R.id.imageViewRec);
         flashing = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flashing_animation);
