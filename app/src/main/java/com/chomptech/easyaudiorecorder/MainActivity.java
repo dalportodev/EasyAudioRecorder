@@ -97,12 +97,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (mPlayer  != null) {
                     mPlayer.release();
                     mPlayer = null;
-                    playButton.setText("Play");
-                    playing = false;
+                    //playButton.setText("Play");
+                    //playing = false;
                 } else {
-                    playButton.setText("Play");
-                    playing = false;
+                    //playButton.setText("Play");
+                    //playing = false;
                 }
+                startPlayback(getCurrentFocus());
             }
         });
 
@@ -125,6 +126,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         /* Checks if any files exist, playing recording set to false */
         fileExists(false);
+        if (recList.size() < 2) {
+            Toast toast = Toast.makeText(getApplicationContext(), "After a recording is created, it will play when pressed in the list above.", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+
+        }
     }
     @Override
     public void onBackPressed() {

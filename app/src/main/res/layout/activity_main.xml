@@ -13,23 +13,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Record"
+        android:text="    Record    "
         android:id="@+id/buttonRecord"
         android:clickable="false"
         android:onClick="recordAudio"
-        android:layout_alignTop="@+id/buttonPlay"
-        android:layout_alignStart="@+id/buttonSend" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:id="@+id/buttonPlay"
-        android:clickable="true"
-        android:nestedScrollingEnabled="false"
-        android:onClick="startPlayback"
-        android:layout_alignTop="@+id/buttonDelete"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignStart="@+id/buttonSend"
+        android:layout_alignTop="@+id/buttonDelete" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -44,7 +33,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="     Delete     "
         android:id="@+id/buttonDelete"
         android:onClick="delete"
         android:layout_above="@+id/buttonRename"
@@ -57,13 +46,12 @@
         android:id="@+id/listView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/buttonRecord"
-        android:background="#FFFFFF" />
+        android:layout_above="@+id/buttonRecord" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send"
+        android:text="      Send      "
         android:id="@+id/buttonSend"
         android:onClick="shareRec"
         android:layout_below="@+id/buttonDelete"
@@ -72,7 +60,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rename"
+        android:text="    Rename    "
         android:id="@+id/buttonRename"
         android:layout_above="@+id/adView"
         android:layout_alignStart="@+id/buttonDelete"
