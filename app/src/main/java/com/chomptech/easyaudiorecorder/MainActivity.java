@@ -1,6 +1,8 @@
 package com.chomptech.easyaudiorecorder;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +13,8 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +38,6 @@ import com.google.android.gms.ads.MobileAds;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private String renameTemp;
     private ImageView recImg;
     private Animation flashing;
+    private NotificationCompat.Builder mNotfBuilder;
+    private NotificationManager notifMan;
 
     private String[] fileList = new String[999];
     private ArrayList recList = new ArrayList<>();
@@ -66,6 +71,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        mNotfBuilder = new NotificationCompat.Builder(this);
+        mNotfBuilder.setSmallIcon(R.drawable.icon);
+        mNotfBuilder.setContentTitle("Easy Audio Recorder");
+        mNotfBuilder.setContentText("Session in progress, recording...");
+
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.setAction("android.intent.action.MAIN");
+        resultIntent.addCategory("android.intent.category.LAUNCHER");
+        //Intent resultIntent = this.getIntent();
+        //resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        //TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //stackBuilder.addParentStack(MainActivity.class);
+
+
+        //stackBuilder.addNextIntent(resultIntent);
+        //PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotfBuilder.setContentIntent(resultPendingIntent);
+        notifMan = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         /* Get permissions */
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -454,6 +481,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     recording = true;
                     recImg.startAnimation(flashing);
                     recButton.setText("       Stop      ");
+
+                    /* Notification for recording */
+                    notifMan.notify(1, mNotfBuilder.build());
+
                 } else {
                     stopRecording();
                 }
@@ -478,4 +509,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             fileExists(false);
         }
     }
+
+
 }
