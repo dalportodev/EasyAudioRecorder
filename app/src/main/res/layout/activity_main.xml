@@ -13,16 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="    Record    "
         android:id="@+id/buttonRecord"
         android:clickable="false"
         android:onClick="recordAudio"
-        android:layout_alignStart="@+id/buttonSend"
-        android:layout_alignTop="@+id/buttonDelete" />
+        android:layout_marginBottom="27dp"
+        android:layout_marginTop="27dp"
+        android:text="                "
+        android:layout_above="@+id/adView"
+        android:layout_centerHorizontal="true" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -33,16 +36,6 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="     Delete     "
-        android:id="@+id/buttonDelete"
-        android:onClick="delete"
-        android:layout_above="@+id/buttonRename"
-        android:layout_alignEnd="@+id/adView"
-        android:layout_marginBottom="7dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -55,32 +48,24 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="      Send       "
-        android:id="@+id/buttonSend"
-        android:onClick="shareRec"
-        android:layout_below="@+id/buttonDelete"
-        android:layout_alignStart="@+id/adView" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="    Rename    "
-        android:id="@+id/buttonRename"
-        android:layout_above="@+id/adView"
-        android:layout_alignStart="@+id/buttonDelete"
-        android:layout_marginBottom="7dp"
-        android:onClick="renameFile" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewRec"
         android:src="@drawable/recording"
         android:visibility="invisible"
-        android:layout_alignTop="@+id/buttonRecord"
+        android:layout_alignBottom="@+id/buttonRecord"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/buttonDelete" />
+        android:elevation="4dp"
+        android:layout_alignTop="@+id/buttonRecord" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewRecBlack"
+        android:src="@drawable/recordingblack"
+        android:visibility="visible"
+        android:layout_alignBottom="@+id/buttonRecord"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:layout_alignTop="@+id/buttonRecord" />
 </RelativeLayout>
