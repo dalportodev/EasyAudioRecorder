@@ -336,7 +336,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     mFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EasyAudioRecorder/EasyAudioRecorder" + "_" + (k) + ".3gp";
                 }
 
-                if (fileList[1].equals("") && fileList[fileList.length - 1].equals("")) {
+                boolean empty = true;
+                for (int u = 0; u < fileList.length; u++) {
+                    if (!fileList[u].equals("")) {
+                        empty = false;
+                    }
+                }
+
+                if (empty == true) {
                     fileList[1] = "Lecture Notes 5_25_16.3gp";
                     fileList[2] = "Lecture Notes 5_26_16.3gp";
                     fileList[3] = "Lecture Notes 5_27_16.3gp";
@@ -346,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 } else {
 
                 }
+                
                 /* Updates adapter for listView */
                 if (!rec) {
                     adapter.clear();
