@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
 
         /*
         mNotfBuilder = new NotificationCompat.Builder(this);
@@ -405,10 +408,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             } else {
                                 Toast toast2 = Toast.makeText(getApplicationContext(), "File rename failed, please try again.", Toast.LENGTH_LONG);
                                 toast2.show();
+                                showRenameDialog();
                             }
                         } else {
                             Toast toast3 = Toast.makeText(getApplicationContext(), "File names with / are not allowed.", Toast.LENGTH_LONG);
                             toast3.show();
+                            showRenameDialog();
                         }
 
                     }
