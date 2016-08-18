@@ -50,7 +50,10 @@
         android:id="@+id/listView"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/buttonRecord"
-        android:layout_below="@+id/my_awesome_toolbar" />
+        android:layout_below="@+id/my_awesome_toolbar"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"/>
 
     <Button
         android:layout_width="wrap_content"
