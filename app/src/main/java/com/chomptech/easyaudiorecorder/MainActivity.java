@@ -212,89 +212,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    public void shareRec(View view) {
-        if (micPermission && extStoragePermission) {
-            if (!recording) {
-                if (mPlayer != null) {
-                    mPlayer.release();
-                    mPlayer = null;
-                    recButton.setText("                ");
-                    recImgBlack.setVisibility(View.VISIBLE);
-                    playing = false;
-                } else {
-                    recButton.setText("                ");
-                    recImgBlack.setVisibility(View.VISIBLE);
-                    playing = false;
-                }
-
-                File rec = new File(mFile);
-                if (rec.exists()) {
-                    Uri uri = Uri.fromFile(rec);
-                    Intent shareIntent = new Intent();
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.setType("audio/*");
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    startActivity(Intent.createChooser(shareIntent, "Share recording to..."));
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to send from the list above.", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before sharing.", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        } else {
-            getPermissions();
-        }
-    }
-
-    public void delete(View view) {
-
-        if (micPermission && extStoragePermission) {
-            if (!recording) {
-        /* If playing, sets mPlayer to null and changes button back to play */
-                if (playing) {
-                    stopPlayback();
-                } else {
-
-                }
-
-        /* Perform deletion task */
-                final File rec = new File(mFile);
-                if (rec.exists()) {
-                    AlertDialog.Builder delConf = new AlertDialog.Builder(this)
-                            .setMessage("Are you sure you want to delete " + rec.getName().substring(0, rec.getName().length() - 4) + "?");
-
-                    delConf.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            rec.delete();
-                            fileExists(false);
-
-                        }
-                    })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            })
-                            .show();
-
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to delete from the list above.", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to finish recording before deleting.", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        } else {
-            getPermissions();
-        }
-    }
-
     public void fileExists(boolean rec) {
         if (micPermission && extStoragePermission) {
             {
@@ -371,32 +288,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     adapter.notifyDataSetChanged();
                 }
             }
-        }
-    }
-    public void renameFile(View view) {
-        if (micPermission && extStoragePermission) {
-            if (!recording) {
-
-                if (playing) {
-                    stopPlayback();
-                } else {
-
-                }
-
-                File rec = new File(mFile);
-
-                if (rec.exists()) {
-                    showRenameDialog();
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please choose a recording to rename from the list above.", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please press stop to end recording before renaming the file.", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        } else {
-            getPermissions();
         }
     }
 
