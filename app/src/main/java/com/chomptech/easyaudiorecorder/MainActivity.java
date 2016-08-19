@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         && fileList[3].equals("Lecture Notes 5_27_16.3gp") && fileList[4].equals("Subject Interview Session 4.3gp")
                         && fileList[5].equals("Piano Recording Attempt 7.3gp") && fileList[6].equals("Conference Meeting Audio Log.3gp")) {
 
-                    Toast toast = Toast.makeText(getApplicationContext(), "These are empty, example recording names. Please tap RECORD to create a recording.", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getApplicationContext(), "These are example names. Please tap RECORD to create a recording.", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
                 /* To change play button back to stop and quit playing audio */

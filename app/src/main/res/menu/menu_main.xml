@@ -18,5 +18,7 @@
         android:id="@+id/delete_menu"
         android:title="Delete"
         android:onClick="delete"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/deleteicon"
         />
 </menu>
