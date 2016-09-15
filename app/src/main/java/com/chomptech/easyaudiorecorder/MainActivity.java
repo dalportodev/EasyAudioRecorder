@@ -227,15 +227,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 /* Assign files in directory to indices in 2nd array corresponding with file name */
                 for (int j = 0; j < files.length; j++) {
                     if (files[j].getName().length() == 25) {
-                        if (files[j].getName().substring(0, 18).equals("EasyAudioRecorder_")) {
+                        if (files[j].getName().substring(0, 18).equals("EasyAudioRecorder_") &&
+                                (files[j].getName().substring(files[j].getName().length() - 4)).equals(".3gp")) {
                             fileList[Integer.valueOf(files[j].getName().substring(18, 21))] = files[j].getName();
                         } else {
-                            fileList[fileList.length - numRenamed] = files[j].getName();
-                            numRenamed++;
+                            if (files[j].getName().substring(files[j].getName().length() - 4).equals(".3gp")) {
+                                fileList[fileList.length - numRenamed] = files[j].getName();
+                                numRenamed++;
+                            }
                         }
                     } else {
-                        fileList[fileList.length - numRenamed] = files[j].getName();
-                        numRenamed++;
+                        if (files[j].getName().length() >= 5) {
+                            if (files[j].getName().substring(files[j].getName().length() - 4).equals(".3gp")) {
+                                fileList[fileList.length - numRenamed] = files[j].getName();
+                                numRenamed++;
+                            }
+                        }
                     }
                 }
 
